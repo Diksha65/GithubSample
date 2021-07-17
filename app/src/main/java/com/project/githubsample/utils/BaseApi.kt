@@ -1,8 +1,6 @@
-package com.project.githubsample.data
+package com.project.githubsample.utils
 
 import android.util.Log
-import com.project.githubsample.utils.Result
-import com.project.githubsample.utils.isNotNull
 import retrofit2.Response
 
 open class BaseApi {

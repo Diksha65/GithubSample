@@ -1,38 +1,32 @@
 package com.project.githubsample.model
 
 import com.squareup.moshi.Json
+import java.sql.Timestamp
 
 data class RepoResponse(
-    @Json(name = "id")
-    val id: Int,
+    @Json(name = "data")
+    val data: List<RepoItem>
+)
 
-    @Json(name = "node_id")
-    val nodeId: String,
-
+data class RepoItem(
     @Json(name = "name")
     val name: String,
 
-    @Json(name = "full_name")
-    val fullName: String,
-
     @Json(name = "description")
-    val description: String,
+    val description: String? = null,
 
     @Json(name = "language")
     val language: String? = null,
 
-    @Json(name = "default_branch")
-    val defaultBranch: String? = null,
-
     @Json(name = "created_at")
-    val createdAt: String,
+    val createdAt: Timestamp,
 
     @Json(name = "updated_at")
-    val updatedAt: String,
+    val updatedAt: Timestamp,
 
     @Json(name = "html_url")
-    val htmlUrl: String? = null,
+    val htmlUrl: String,
 
     @Json(name = "pulls_url")
-    val pullsUrl: String? = null
+    val pullsUrl: String
 )

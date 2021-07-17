@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 
 data class PullsResponse(
     @Json(name = "data")
-    val pullsResponse: List<PullItem>
+    val data: List<PullItem>
 )
 
 data class PullItem(

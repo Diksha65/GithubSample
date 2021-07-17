@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/sixteen_dp">
+
+    <TextView
+        android:id="@+id/progressTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/twenty_sp"
+        android:visibility="gone"
+        tools:text="Dialog Title"
+        tools:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/dialogProgress"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/progressTitle"
+        android:layout_marginTop="@dimen/twelve_dp"
+        android:indeterminateTint="@color/green_dark" />
+
+    <TextView
+        android:id="@+id/progressDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/dialogProgress"
+        android:layout_alignBottom="@id/dialogProgress"
+        android:layout_marginStart="@dimen/sixteen_dp"
+        android:layout_toEndOf="@id/dialogProgress"
+        android:gravity="center_vertical"
+        android:textColor="@color/grey_dark"
+        tools:text="Loading..." />
+
+</RelativeLayout>

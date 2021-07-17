@@ -1,6 +1,7 @@
 package com.project.githubsample.data
 
 import com.project.githubsample.model.PullsResponse
+import com.project.githubsample.model.RepoItem
 import com.project.githubsample.model.RepoResponse
 import com.project.githubsample.model.UserResponse
 import retrofit2.Response
@@ -22,7 +23,7 @@ interface Api {
     @GET(GET_ALL_REPOS)
     suspend fun getAllRepos(
         @Path("username") userName: String
-    ): Response<RepoResponse>
+    ): Response<List<RepoItem>>
 
     @GET(GET_ALL_PRS)
     suspend fun getAllPRs(

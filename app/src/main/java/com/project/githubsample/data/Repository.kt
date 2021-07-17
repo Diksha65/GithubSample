@@ -1,6 +1,7 @@
 package com.project.githubsample.data
 
 import com.project.githubsample.model.PullsResponse
+import com.project.githubsample.model.RepoItem
 import com.project.githubsample.model.RepoResponse
 import com.project.githubsample.model.UserResponse
 import com.project.githubsample.utils.Result
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.map
 
 interface Repository {
     fun getUsersData(userName: String): Flow<Result<UserResponse>>
-    fun getAllRepos(userName: String): Flow<Result<RepoResponse>>
+    fun getAllRepos(userName: String): Flow<Result<List<RepoItem>>>
     fun getAllPRs(owner: String, repo: String): Flow<Result<PullsResponse>>
 }
 
@@ -26,7 +27,7 @@ class RepositoryImpl(
         }
     }
 
-    override fun getAllRepos(userName: String): Flow<Result<RepoResponse>> {
+    override fun getAllRepos(userName: String): Flow<Result<List<RepoItem>>> {
         return dataSource.getAllRepos(userName).map { result ->
             when (result) {
                 is Result.Success -> result
