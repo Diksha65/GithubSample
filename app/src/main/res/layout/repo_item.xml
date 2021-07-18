@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/sixteen_dp"
+    android:paddingTop="@dimen/sixteen_dp"
+    android:paddingEnd="@dimen/sixteen_dp">
+
+    <TextView
+        android:id="@+id/repoTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/four_dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/twenty_sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/language"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Repo Title" />
+
+    <TextView
+        android:id="@+id/repoDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/four_dp"
+        android:paddingTop="@dimen/four_dp"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/fourteen_sp"
+        app:layout_constraintEnd_toStartOf="@id/language"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/repoTitle"
+        tools:text="Description" />
+
+    <TextView
+        android:id="@+id/createdAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/four_dp"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/twelve_sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/repoDescription"
+        app:layout_goneMarginTop="@dimen/four_dp"
+        tools:text="CreatedAt: 2021-07-17T12:53:05Z" />
+
+    <TextView
+        android:id="@+id/updatedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/twelve_sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/createdAt"
+        tools:text="UpdatedAt: 2021-07-17T12:53:05Z" />
+
+    <TextView
+        android:id="@+id/language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corner_bg"
+        android:paddingStart="@dimen/twelve_dp"
+        android:paddingTop="@dimen/four_dp"
+        android:paddingEnd="@dimen/twelve_dp"
+        android:paddingBottom="@dimen/four_dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/fourteen_sp"
+        app:layout_constraintBottom_toBottomOf="@id/repoDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Kotlin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/two_dp"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:background="@color/grey_lighter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/updatedAt" />
+</androidx.constraintlayout.widget.ConstraintLayout>
