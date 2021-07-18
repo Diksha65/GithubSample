@@ -11,11 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
 
-        </activity>
-
-        <activity android:name=".ui.screen.ReposActivity">
+        <activity android:name=".ui.screen.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,9 +20,11 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.screen.LoginActivity"/>
+        <activity android:name=".utils.BaseActivity"/>
+        <activity android:name=".ui.screen.ReposActivity"/>
         <activity android:name=".ui.screen.ClosedPRsActivity"/>
 
-        <activity android:name=".utils.BaseActivity"/>
     </application>
 
 </manifest>

@@ -15,4 +15,8 @@
 
     <string name="no_public_repos">No Public Repositories</string>
     <string name="no_closed_prs">No Closed PRs</string>
+
+    <string name="edit_text_hint">eg: Diksha65</string>
+    <string name="get_in">Get In!!</string>
+    <string name="please_enter_name">Please enter a valid Github User Name</string>
 </resources>
