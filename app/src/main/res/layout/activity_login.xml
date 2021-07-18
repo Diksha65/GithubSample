@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageViewBigger"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/two_hundred_fifty_dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/github_bigger_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageViewName"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/forty_eight_dp"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/github_name_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageViewBigger" />
+
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/forty_eight_dp"
+            android:layout_marginStart="@dimen/sixteen_dp"
+            android:layout_marginTop="@dimen/forty_eight_dp"
+            android:layout_marginEnd="@dimen/sixteen_dp"
+            android:background="@drawable/edit_text_rounded_border_inactive"
+            android:hint="@string/edit_text_hint"
+            android:maxLines="1"
+            android:paddingStart="@dimen/twelve_dp"
+            android:paddingTop="@dimen/fourteen_dp"
+            android:paddingEnd="@dimen/twelve_dp"
+            android:paddingBottom="@dimen/fourteen_dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageViewName" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/forty_eight_dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/sixteen_dp"
+            android:gravity="center"
+            android:paddingStart="@dimen/thirty_two_dp"
+            android:paddingEnd="@dimen/thirty_two_dp"
+            android:text="@string/get_in"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sixteen_sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nameEditText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

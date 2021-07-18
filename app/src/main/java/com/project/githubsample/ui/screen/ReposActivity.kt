@@ -1,5 +1,7 @@
 package com.project.githubsample.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,8 +20,19 @@ class ReposActivity : BaseActivity() {
 
     companion object {
         private const val TAG = "ReposActivity"
+
+        private const val USER_NAME = "USER_NAME"
+
+        fun startActivity(context: Context, userName: String) {
+            val intent = Intent(context, ReposActivity::class.java).apply {
+                putExtra(USER_NAME, userName)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            context.startActivity(intent)
+        }
     }
 
+    private lateinit var userName: String
     private var progressDialog: ProgressDialog? = null
 
     private val viewModel: GithubDataViewModel by fastLazy {
@@ -72,13 +85,15 @@ class ReposActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.recycler_view)
 
+        userName = intent.getStringExtra(USER_NAME)!!
+
         viewModel.events.observe(this, eventObserver)
         viewModel.repos.observe(this, reposObserver)
 
-        viewModel.getRepositoriesList("Diksha65") //ToDo Diksha - Remove the hardcode
+        viewModel.getRepositoriesList(userName)
 
         retryButton.setOnClickListener {
-            viewModel.getRepositoriesList("Diksha65")
+            viewModel.getRepositoriesList(userName)
         }
 
     }
@@ -108,7 +123,7 @@ class ReposActivity : BaseActivity() {
                         Log.d(TAG, "$it clicked")
                         ClosedPRsActivity.startActivity(
                             context = this@ReposActivity,
-                            owner = "Diksha65", //ToDO Diksha Change this
+                            owner = userName,
                             repo = it
                         )
                     }
