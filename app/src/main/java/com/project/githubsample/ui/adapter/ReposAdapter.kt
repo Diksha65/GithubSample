@@ -1,5 +1,6 @@
 package com.project.githubsample.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,7 @@ class ReposAdapter(
                 }
             }
 
+            Log.e("**********************", "${item.createdAt} ${item.updatedAt}") //ToDO Diksha Check
             createdAt.text = itemView.context.getString(R.string.created_at, item.createdAt)
             updatedAt.text = itemView.context.getString(R.string.updated_at, item.updatedAt)
 
