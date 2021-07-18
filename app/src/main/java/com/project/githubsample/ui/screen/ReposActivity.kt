@@ -3,14 +3,12 @@ package com.project.githubsample.ui.screen
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.githubsample.R
 import com.project.githubsample.custom.ProgressDialog
-import com.project.githubsample.model.RepoItem
-import com.project.githubsample.model.RepoResponse
+import com.project.githubsample.model.RepositoryItem
 import com.project.githubsample.ui.adapter.ReposAdapter
 import com.project.githubsample.ui.viewmodel.GithubDataViewModel
 import com.project.githubsample.utils.*
@@ -30,6 +28,7 @@ class ReposActivity : BaseActivity() {
 
     private val eventObserver: Observer<Pair<ScreenEvents, Any?>> by fastLazy {
         Observer<Pair<ScreenEvents, Any?>> {
+            Log.e(TAG, "${it.first} ${it.second}")
             when (it.first) {
                 ScreenEvents.ShowProgressDialog -> {
                     if (progressDialog.isNull()) progressDialog = ProgressDialog()
@@ -42,27 +41,28 @@ class ReposActivity : BaseActivity() {
                 ScreenEvents.DismissProgressDialog -> {
                     progressDialog?.hideProgress()
                 }
-                ScreenEvents.ShowToast -> {
-                    it.second?.let { msg ->
-                        when (msg) {
-                            is Int -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-                            is String -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-                            else -> Log.e(TAG, "got toast event with invalid data")
+                ScreenEvents.ShowRetry -> {
+                    it.second?.let { data ->
+                        when(data) {
+                            is Int -> retryMessage.text = getString(data)
+                            is String -> retryMessage.text = data
+                            else -> retryMessage.text = getString(R.string.something_went_wrong)
                         }
                     }
-                }
-                ScreenEvents.ShowRetry -> {
+                    retryMessage.visibility = View.VISIBLE
                     retryButton.text = getString(R.string.retry)
                     retryButton.visibility = View.VISIBLE
+
                     recyclerView.visibility = View.GONE
                     noReposText.visibility = View.GONE
                 }
-                ScreenEvents.ShowSuccess -> {
-                    if (it.second.isNotNull() && it.second is List<*>) {
-                        showSuccessScreen(it.second as List<RepoItem>)
-                    }
-                }
             }
+        }
+    }
+
+    private val reposObserver: Observer<List<RepositoryItem>> by fastLazy {
+        Observer<List<RepositoryItem>> {
+            showSuccessScreen(it)
         }
     }
 
@@ -73,11 +73,14 @@ class ReposActivity : BaseActivity() {
         setContentView(R.layout.recycler_view)
 
         viewModel.events.observe(this, eventObserver)
+        viewModel.repos.observe(this, reposObserver)
+
         viewModel.getRepositoriesList("Diksha65") //ToDo Diksha - Remove the hardcode
 
         retryButton.setOnClickListener {
             viewModel.getRepositoriesList("Diksha65")
         }
+
     }
 
     override fun onPause() {
@@ -85,8 +88,9 @@ class ReposActivity : BaseActivity() {
         super.onPause()
     }
 
-    private fun showSuccessScreen(data: List<RepoItem>) {
+    private fun showSuccessScreen(data: List<RepositoryItem>) {
         retryButton.visibility = View.GONE
+        retryMessage.visibility = View.GONE
 
         if(data.isEmpty()) {
             noReposText.visibility = View.VISIBLE

@@ -1,10 +1,7 @@
 package com.project.githubsample.data
 
 import android.util.Log
-import com.project.githubsample.model.PullsResponse
-import com.project.githubsample.model.RepoItem
-import com.project.githubsample.model.RepoResponse
-import com.project.githubsample.model.UserResponse
+import com.project.githubsample.model.*
 import com.project.githubsample.utils.BaseApi
 import com.project.githubsample.utils.Result
 import kotlinx.coroutines.flow.Flow
@@ -14,8 +11,8 @@ import java.lang.Exception
 
 interface DataSource {
     fun getUsersData(userName: String): Flow<Result<UserResponse>>
-    fun getAllRepos(userName: String): Flow<Result<List<RepoItem>>>
-    fun getAllPRs(owner: String, repo: String): Flow<Result<PullsResponse>>
+    fun getAllRepos(userName: String): Flow<Result<List<RepositoryItem>>>
+    fun getAllPRs(owner: String, repo: String): Flow<Result<List<PullItem>>>
 }
 
 class DataSourceImpl(
@@ -38,7 +35,7 @@ class DataSourceImpl(
         }
     }
 
-    override fun getAllRepos(userName: String): Flow<Result<List<RepoItem>>> {
+    override fun getAllRepos(userName: String): Flow<Result<List<RepositoryItem>>> {
         return flow {
             emit(Result.Loading)
             val result = getResult { api.getAllRepos(userName) }
@@ -50,7 +47,7 @@ class DataSourceImpl(
         }
     }
 
-    override fun getAllPRs(owner: String, repo: String): Flow<Result<PullsResponse>> {
+    override fun getAllPRs(owner: String, repo: String): Flow<Result<List<PullItem>>> {
         return flow {
             emit(Result.Loading)
             val result = getResult { api.getAllPRs(owner, repo) }

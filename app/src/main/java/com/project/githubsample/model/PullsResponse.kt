@@ -2,11 +2,6 @@ package com.project.githubsample.model
 
 import com.squareup.moshi.Json
 
-data class PullsResponse(
-    @Json(name = "data")
-    val data: List<PullItem>
-)
-
 data class PullItem(
     @Json(name = "id")
     val id: Int,

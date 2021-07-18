@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.project.githubsample.R
 import com.project.githubsample.di.Module
-import com.project.githubsample.model.PullsResponse
-import com.project.githubsample.model.RepoResponse
+import com.project.githubsample.model.PullItem
+import com.project.githubsample.model.RepositoryItem
 import com.project.githubsample.utils.Result
 import com.project.githubsample.utils.ScreenEvents
 import com.project.githubsample.utils.fastLazy
@@ -23,12 +23,12 @@ class GithubDataViewModel : ViewModel() {
         private const val TAG = "GithubDataViewModel"
     }
 
-    private val _repos = MutableLiveData<RepoResponse>()
-    val repos: LiveData<RepoResponse>
+    private val _repos = MutableLiveData<List<RepositoryItem>>()
+    val repos: LiveData<List<RepositoryItem>>
         get() = _repos
 
-    private val _prs = MutableLiveData<PullsResponse>()
-    val prs: LiveData<PullsResponse>
+    private val _prs = MutableLiveData<List<PullItem>>()
+    val prs: LiveData<List<PullItem>>
         get() = _prs
 
     private val _events = MutableLiveData<Pair<ScreenEvents, Any?>>()
@@ -44,8 +44,15 @@ class GithubDataViewModel : ViewModel() {
         viewModelScope.launch {
             repository.getAllRepos(
                 userName = userName
-            ).collect {
-                handleResponse(it)
+            ).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        Log.d(TAG, "Success: $result")
+                        _events.value = Pair(ScreenEvents.DismissProgressDialog, null)
+                        _repos.value = result.data
+                    }
+                    else -> handleNonSuccessResponse(result)
+                }
             }
         }
     }
@@ -56,39 +63,37 @@ class GithubDataViewModel : ViewModel() {
             repository.getAllPRs(
                 owner = owner,
                 repo = repo
-            ).collect {
-                handleResponse(it)
+            ).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        Log.d(TAG, "Success: $result")
+                        _events.value = Pair(ScreenEvents.DismissProgressDialog, null)
+                        _prs.value = result.data
+                    }
+                    else -> handleNonSuccessResponse(result)
+                }
             }
         }
     }
 
-    private fun <T> handleResponse(result: Result<T>) {
+    private fun <T> handleNonSuccessResponse(result: Result<T>) {
         when (result) {
-            is Result.Success -> {
-                Log.d(TAG, "Success: $result")
-                _events.value = Pair(ScreenEvents.DismissProgressDialog, null)
-                _events.value = Pair(ScreenEvents.ShowSuccess, result.data)
-            }
             is Result.Error -> {
                 Log.e(TAG, "Error: $result")
                 _events.value = Pair(ScreenEvents.DismissProgressDialog, null)
-                _events.value = Pair(ScreenEvents.ShowRetry, null)
-                handleErrorResponse(result.exception)
+                val errorMessage: Any? = when (result.exception) {
+                    is ConnectException -> R.string.network_error
+                    is UnknownHostException -> R.string.unknown_host_error
+                    else -> result.exception.message
+                }
+                _events.value =
+                    Pair(ScreenEvents.ShowRetry, errorMessage ?: R.string.something_went_wrong)
             }
             is Result.Loading -> {
                 Log.d(TAG, "Loading: $result")
                 _events.value = Pair(ScreenEvents.ShowProgressDialog, null)
             }
         }
-    }
-
-    private fun handleErrorResponse(exception: Exception) {
-        val errorMessage: Any? = when (exception) {
-            is ConnectException -> R.string.network_error
-            is UnknownHostException -> R.string.unknown_host_error
-            else -> exception.message
-        }
-        _events.value = Pair(ScreenEvents.ShowToast, errorMessage ?: R.string.something_went_wrong)
     }
 }
 

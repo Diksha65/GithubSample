@@ -11,9 +11,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:textSize="@dimen/twenty_sp"
-        android:visibility="gone"
-        tools:text="Dialog Title"
-        tools:visibility="visible" />
+        tools:text="Dialog Title" />
 
     <ProgressBar
         android:id="@+id/dialogProgress"

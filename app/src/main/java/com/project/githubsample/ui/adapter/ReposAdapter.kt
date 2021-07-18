@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.project.githubsample.R
-import com.project.githubsample.model.RepoItem
+import com.project.githubsample.model.RepositoryItem
 import com.project.githubsample.utils.isNotNull
 import kotlinx.android.synthetic.main.repo_item.view.*
 
 class ReposAdapter(
-    private val items: List<RepoItem>,
+    private val items: List<RepositoryItem>,
     private val onRepoClicked: ((String) -> Unit)
 ) : RecyclerView.Adapter<ReposAdapter.ReposVH>() {
 
@@ -38,7 +38,7 @@ class ReposAdapter(
         private val updatedAt = itemView.updatedAt
         private val language = itemView.language
 
-        fun bind(item: RepoItem, onRepoClicked: (String) -> Unit) {
+        fun bind(item: RepositoryItem, onRepoClicked: (String) -> Unit) {
             title.text = item.name
 
             description.apply {

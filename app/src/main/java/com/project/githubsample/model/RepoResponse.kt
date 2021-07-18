@@ -1,14 +1,8 @@
 package com.project.githubsample.model
 
 import com.squareup.moshi.Json
-import java.sql.Timestamp
 
-data class RepoResponse(
-    @Json(name = "data")
-    val data: List<RepoItem>
-)
-
-data class RepoItem(
+data class RepositoryItem(
     @Json(name = "name")
     val name: String,
 
@@ -19,10 +13,10 @@ data class RepoItem(
     val language: String? = null,
 
     @Json(name = "created_at")
-    val createdAt: Timestamp,
+    val createdAt: String,
 
     @Json(name = "updated_at")
-    val updatedAt: Timestamp,
+    val updatedAt: String,
 
     @Json(name = "html_url")
     val htmlUrl: String,
