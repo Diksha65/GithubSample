@@ -8,6 +8,10 @@ import retrofit2.http.Query
 
 interface Api {
     companion object {
+        private const val sortRepository = "created"
+        private const val sortPRsDirection = "asc"
+        private const val filterPRsState = "closed"
+
         private const val GET_USER_DATA = "/users/{username}"
         private const val GET_ALL_REPOS = "/users/{username}/repos"
         private const val GET_CLOSED_PRS = "/repos/{owner}/{repo}/pulls"
@@ -21,14 +25,14 @@ interface Api {
     @GET(GET_ALL_REPOS)
     suspend fun getAllRepos(
         @Path("username") userName: String,
-        @Query("sort") sort: String = "created"
+        @Query("sort") sort: String = sortRepository
     ): Response<List<RepositoryItem>>
 
     @GET(GET_CLOSED_PRS)
     suspend fun getClosedPRs(
         @Path("owner") owner: String,
         @Path("repo") repo: String,
-        @Query("state") state: String = "closed",
-        @Query("direction") direction: String = "asc"
+        @Query("state") state: String = filterPRsState,
+        @Query("direction") direction: String = sortPRsDirection
     ): Response<List<PullItem>>
 }

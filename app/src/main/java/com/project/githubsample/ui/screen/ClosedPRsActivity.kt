@@ -95,7 +95,7 @@ class ClosedPRsActivity : BaseActivity() {
         viewModel.events.observe(this, eventObserver)
         viewModel.prs.observe(this, prsObserver)
 
-        viewModel.getClosedPRsList(owner, repo) //ToDo Diksha - Remove the hardcode
+        viewModel.getClosedPRsList(owner, repo)
 
         retryButton.setOnClickListener {
             viewModel.getClosedPRsList(owner, repo)
@@ -125,7 +125,7 @@ class ClosedPRsActivity : BaseActivity() {
                 adapter = ClosedPRsAdapter(
                     items = data,
                     onPrClicked = {
-                        Log.e(TAG, "$it clicked")
+                        Log.e(TAG, "$it clicked") //ToDos Diksha Change this
                     }
                 )
             }

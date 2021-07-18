@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.project.githubsample.R
 import com.project.githubsample.model.PullItem
 import com.project.githubsample.utils.isNotNull
@@ -41,7 +40,7 @@ class ClosedPRsAdapter(
 
         fun bind(item: PullItem, onPrClicked: (String) -> Unit) {
 
-            prTitle.text = item.number.toString() + ": " + item.title
+            prTitle.text = item.number.toString() + ": " + item.title //ToDo Diksha - Check this
 
             prDescription.apply {
                 if (item.body.isNotNull()) {

@@ -108,7 +108,7 @@ class ReposActivity : BaseActivity() {
                         Log.d(TAG, "$it clicked")
                         ClosedPRsActivity.startActivity(
                             context = this@ReposActivity,
-                            owner = "Diksha65", //Change this
+                            owner = "Diksha65", //ToDO Diksha Change this
                             repo = it
                         )
                     }
