@@ -13,7 +13,10 @@ import com.project.githubsample.custom.ProgressDialog
 import com.project.githubsample.model.RepositoryItem
 import com.project.githubsample.ui.adapter.ReposAdapter
 import com.project.githubsample.ui.viewmodel.GithubDataViewModel
-import com.project.githubsample.utils.*
+import com.project.githubsample.utils.BaseActivity
+import com.project.githubsample.utils.ScreenEvents
+import com.project.githubsample.utils.fastLazy
+import com.project.githubsample.utils.isNull
 import kotlinx.android.synthetic.main.recycler_view.*
 
 class ReposActivity : BaseActivity() {

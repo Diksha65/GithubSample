@@ -25,8 +25,12 @@ object Module {
             .build()
     }
 
+    val moshi: Moshi by fastLazy {
+        Moshi.Builder().build()
+    }
+
     private val moshiConverterFactory: MoshiConverterFactory by fastLazy {
-        MoshiConverterFactory.create(Moshi.Builder().build())
+        MoshiConverterFactory.create(moshi)
     }
 
     private val api: Api by fastLazy {

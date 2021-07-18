@@ -3,15 +3,15 @@ package com.project.githubsample.ui.screen
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.project.githubsample.R
+import com.project.githubsample.custom.ProgressDialog
 import com.project.githubsample.ui.viewmodel.LoginViewModel
-import com.project.githubsample.utils.BaseActivity
-import com.project.githubsample.utils.SavedPreference
-import com.project.githubsample.utils.afterTextChanged
-import com.project.githubsample.utils.fastLazy
+import com.project.githubsample.utils.*
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity() {
@@ -27,8 +27,42 @@ class LoginActivity : BaseActivity() {
         }
     }
 
+    private var progressDialog: ProgressDialog? = null
+
     private val viewModel: LoginViewModel by fastLazy {
         ViewModelProvider(this).get(LoginViewModel::class.java)
+    }
+
+    private val eventObserver: Observer<Pair<ScreenEvents, Any?>> by fastLazy {
+        Observer<Pair<ScreenEvents, Any?>> {
+            Log.e(TAG, "${it.first} ${it.second}")
+            when (it.first) {
+                ScreenEvents.ShowProgressDialog -> {
+                    if (progressDialog.isNull()) progressDialog = ProgressDialog()
+                    progressDialog!!.showProgress(
+                        context = this,
+                        title = R.string.loading,
+                        message = R.string.please_wait
+                    )
+                }
+                ScreenEvents.DismissProgressDialog -> {
+                    progressDialog?.hideProgress()
+                }
+                ScreenEvents.ShowRetry -> {
+                    it.second?.let { data ->
+                        when (data) {
+                            is Int -> Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
+                            is String -> Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
+                            else -> Toast.makeText(
+                                this,
+                                R.string.something_went_wrong,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun getLogTag(): String = TAG
@@ -37,6 +71,7 @@ class LoginActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
+        viewModel.events.observe(this, eventObserver)
         setScreen()
     }
 
@@ -68,7 +103,13 @@ class LoginActivity : BaseActivity() {
             } else {
                 val savedPreference = SavedPreference(this)
                 savedPreference.loginUser(userName)
-                ReposActivity.startActivity(this, userName)
+                viewModel.getUserResponse(
+                    userName = userName,
+                    pref = savedPreference,
+                    onSuccess = {
+                        ReposActivity.startActivity(this, userName)
+                    }
+                )
             }
         }
 
