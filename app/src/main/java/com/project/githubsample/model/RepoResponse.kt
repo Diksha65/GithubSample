@@ -1,23 +1,23 @@
 package com.project.githubsample.model
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class RepositoryItem(
-    @Json(name = "name")
+    @SerializedName("name")
     val name: String,
 
-    @Json(name = "description")
+    @SerializedName("description")
     val description: String? = null,
 
-    @Json(name = "language")
+    @SerializedName("language")
     val language: String? = null,
 
-    @Json(name = "created_at")
+    @SerializedName("created_at")
     val createdAt: String,
 
-    @Json(name = "updated_at")
+    @SerializedName("updated_at")
     val updatedAt: String,
 
-    @Json(name = "html_url")
+    @SerializedName("html_url")
     val htmlUrl: String
 )

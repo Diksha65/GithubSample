@@ -1,30 +1,29 @@
 package com.project.githubsample.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import com.google.gson.annotations.SerializedName
 
 data class UserResponse(
-    @Json(name = "login")
+    @SerializedName("login")
     val login: String,
 
-    @Json(name = "name")
+    @SerializedName("name")
     val name: String,
 
-    @Json(name = "avatar_url")
+    @SerializedName("avatar_url")
     val avatarUrl: String,
 
-    @Json(name = "html_url")
+    @SerializedName("html_url")
     val htmlUrl: String,
 
-    @Json(name = "company")
+    @SerializedName("company")
     val company: String? = null,
 
-    @Json(name = "public_repos")
+    @SerializedName("public_repos")
     val publicRepos: Int,
 
-    @Json(name = "followers")
+    @SerializedName("followers")
     val followers: Int,
 
-    @Json(name = "following")
+    @SerializedName("following")
     val following: Int
 )

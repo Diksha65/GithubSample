@@ -133,6 +133,7 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
 
                 adapter = ReposAdapter(
                     items = data,
+                    pref = SavedPreference(this@ReposActivity),
                     onRepoClicked = {
                         Log.d(TAG, "$it clicked")
                         ClosedPRsActivity.startActivity(
@@ -147,7 +148,8 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
     }
 
     private fun setUpNavigationDrawer() {
-        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.open, R.string.close)
+        val toggle =
+            ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.open, R.string.close)
         toggle.isDrawerIndicatorEnabled = true
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
@@ -171,7 +173,7 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
             headerView.githubLoginName.text = it.login
             headerView.githubName.text = it.name
 
-            if(it.company.isNotNull()) {
+            if (it.company.isNotNull()) {
                 headerView.company.text = it.company
                 headerView.company.visibility = View.VISIBLE
             } else {
@@ -179,7 +181,8 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
             }
 
             headerView.publicRepos.text = getString(R.string.public_repos, it.publicRepos)
-            headerView.followers_following.text = getString(R.string.followers_following, it.followers, it.following)
+            headerView.followers_following.text =
+                getString(R.string.followers_following, it.followers, it.following)
         }
     }
 

@@ -2,10 +2,8 @@ package com.project.githubsample.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.project.githubsample.di.Module
 import com.project.githubsample.model.UserResponse
-import com.squareup.moshi.JsonAdapter
 
 class SavedPreference(context: Context) {
 
@@ -34,26 +32,17 @@ class SavedPreference(context: Context) {
     }
 
     fun setUserResponse(data: UserResponse?) {
-        Log.e("Pref", "setUserResponse $data")
         if (data.isNull()) {
             editor.putString(USER_RESPONSE, null)
         } else {
-            val userResponseAdapter: JsonAdapter<UserResponse> =
-                Module.moshi.adapter(UserResponse::class.java)
-            Log.e("Pref", "setUserResponse 2 ${userResponseAdapter.toJson(data)}")
-            editor.putString(USER_RESPONSE, userResponseAdapter.toJson(data))
+            editor.putString(USER_RESPONSE, Module.gson.toJson(data))
             editor.commit()
         }
     }
 
     fun getUserResponse(): UserResponse? {
-        Log.e("Pref", "getUserResponse")
         val data = pref.getString(USER_RESPONSE, null)
         if (data.isNull()) return null
-        Log.e("Pref", "getUserResponse 2 $data")
-        val userResponseAdapter: JsonAdapter<UserResponse> =
-            Module.moshi.adapter(UserResponse::class.java)
-        Log.e("Pref", "getUserResponse 3 ${userResponseAdapter.fromJson(data)}")
-        return userResponseAdapter.fromJson(data!!)
+        return Module.gson.fromJson(data!!, UserResponse::class.java)
     }
 }
