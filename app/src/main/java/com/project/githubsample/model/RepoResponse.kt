@@ -19,8 +19,5 @@ data class RepositoryItem(
     val updatedAt: String,
 
     @Json(name = "html_url")
-    val htmlUrl: String,
-
-    @Json(name = "pulls_url")
-    val pullsUrl: String
+    val htmlUrl: String
 )

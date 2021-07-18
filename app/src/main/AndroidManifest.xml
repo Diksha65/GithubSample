@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.screen.ClosedPRsActivity"/>
+
         <activity android:name=".utils.BaseActivity"/>
     </application>
 

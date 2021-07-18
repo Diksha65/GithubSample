@@ -12,7 +12,7 @@ import java.lang.Exception
 interface DataSource {
     fun getUsersData(userName: String): Flow<Result<UserResponse>>
     fun getAllRepos(userName: String): Flow<Result<List<RepositoryItem>>>
-    fun getAllPRs(owner: String, repo: String): Flow<Result<List<PullItem>>>
+    fun getClosedPRs(owner: String, repo: String): Flow<Result<List<PullItem>>>
 }
 
 class DataSourceImpl(
@@ -47,10 +47,10 @@ class DataSourceImpl(
         }
     }
 
-    override fun getAllPRs(owner: String, repo: String): Flow<Result<List<PullItem>>> {
+    override fun getClosedPRs(owner: String, repo: String): Flow<Result<List<PullItem>>> {
         return flow {
             emit(Result.Loading)
-            val result = getResult { api.getAllPRs(owner, repo) }
+            val result = getResult { api.getClosedPRs(owner, repo) }
             Log.d(TAG, "Success: $result")
             emit(result)
         }.catch {

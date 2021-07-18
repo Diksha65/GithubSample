@@ -12,4 +12,7 @@
     <string name="created_at">Created At: %1$s</string>
     <string name="updated_at">Updated At: %1$s</string>
     <string name="closed_at">Closed At: %1$s</string>
+
+    <string name="no_public_repos">No Public Repositories</string>
+    <string name="no_closed_prs">No Closed PRs</string>
 </resources>

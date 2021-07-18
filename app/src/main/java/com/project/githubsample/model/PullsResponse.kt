@@ -3,12 +3,6 @@ package com.project.githubsample.model
 import com.squareup.moshi.Json
 
 data class PullItem(
-    @Json(name = "id")
-    val id: Int,
-
-    @Json(name = "node_id")
-    val nodeId: String,
-
     @Json(name = "number")
     val number: Int,
 

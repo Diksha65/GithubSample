@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/sixteen_dp"
+    android:paddingTop="@dimen/sixteen_dp"
+    android:paddingEnd="@dimen/sixteen_dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/twenty_four_dp"
+        android:layout_height="@dimen/twenty_four_dp"
+        android:layout_marginTop="@dimen/four_dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/merge_pr_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/prTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginEnd="@dimen/four_dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/twenty_sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="PR Title" />
+
+    <TextView
+        android:id="@+id/prDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/four_dp"
+        android:paddingTop="@dimen/four_dp"
+        android:textColor="@color/grey_dark"
+        android:textSize="@dimen/fourteen_sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/prTitle"
+        app:layout_constraintTop_toBottomOf="@id/prTitle"
+        tools:text="Description" />
+
+    <TextView
+        android:id="@+id/createdAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/four_dp"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/twelve_sp"
+        app:layout_constraintStart_toStartOf="@id/prTitle"
+        app:layout_constraintTop_toBottomOf="@id/prDescription"
+        app:layout_goneMarginTop="@dimen/four_dp"
+        tools:text="CreatedAt: 2021-07-17T12:53:05Z" />
+
+    <TextView
+        android:id="@+id/closedAt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/grey_light"
+        android:textSize="@dimen/twelve_sp"
+        app:layout_constraintStart_toStartOf="@id/prTitle"
+        app:layout_constraintTop_toBottomOf="@id/createdAt"
+        tools:text="ClosedAt: 2021-07-17T12:53:05Z" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/two_dp"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:background="@color/grey_lighter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/closedAt" />
+</androidx.constraintlayout.widget.ConstraintLayout>

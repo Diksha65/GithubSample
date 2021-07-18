@@ -57,10 +57,10 @@ class GithubDataViewModel : ViewModel() {
         }
     }
 
-    fun getPRsList(owner: String, repo: String) {
+    fun getClosedPRsList(owner: String, repo: String) {
         Log.v(TAG, "getPRsList:: owner:$owner repo:$repo")
         viewModelScope.launch {
-            repository.getAllPRs(
+            repository.getClosedPRs(
                 owner = owner,
                 repo = repo
             ).collect { result ->
