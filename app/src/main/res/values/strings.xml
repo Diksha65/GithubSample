@@ -19,4 +19,13 @@
     <string name="edit_text_hint">eg: Diksha65</string>
     <string name="get_in">Get In!!</string>
     <string name="please_enter_name">Please enter a valid Github User Name</string>
+
+    <string name="menu_repos">Repos</string>
+    <string name="menu_logout">Logout</string>
+
+    <string name="open">open</string>
+    <string name="close">close</string>
+
+    <string name="public_repos">Public Repos: %1$d</string>
+    <string name="followers_following">Followers: %1$d   Following: %2$d</string>
 </resources>

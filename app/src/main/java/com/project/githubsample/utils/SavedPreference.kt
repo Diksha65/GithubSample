@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.project.githubsample.di.Module
 import com.project.githubsample.model.UserResponse
-import com.squareup.moshi.JsonAdapter
 
 class SavedPreference(context: Context) {
 
@@ -23,7 +22,7 @@ class SavedPreference(context: Context) {
         editor.apply()
     }
 
-    fun loginUser(userName: String) {
+    fun setUserName(userName: String?) {
         editor.putString(LOGGED_IN_USER_NAME, userName)
         editor.commit()
     }
@@ -36,18 +35,14 @@ class SavedPreference(context: Context) {
         if (data.isNull()) {
             editor.putString(USER_RESPONSE, null)
         } else {
-            val userResponseAdapter: JsonAdapter<UserResponse> =
-                Module.moshi.adapter(UserResponse::class.java)
-            editor.putString(USER_RESPONSE, userResponseAdapter.toJson(data))
+            editor.putString(USER_RESPONSE, Module.gson.toJson(data))
+            editor.commit()
         }
     }
 
     fun getUserResponse(): UserResponse? {
         val data = pref.getString(USER_RESPONSE, null)
         if (data.isNull()) return null
-
-        val userResponseAdapter: JsonAdapter<UserResponse> =
-            Module.moshi.adapter(UserResponse::class.java)
-        return userResponseAdapter.fromJson(data!!)
+        return Module.gson.fromJson(data!!, UserResponse::class.java)
     }
 }

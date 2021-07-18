@@ -1,18 +1,20 @@
 package com.project.githubsample.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.project.githubsample.R
 import com.project.githubsample.model.RepositoryItem
+import com.project.githubsample.utils.SavedPreference
 import com.project.githubsample.utils.isNotNull
 import kotlinx.android.synthetic.main.repo_item.view.*
 
 class ReposAdapter(
     private val items: List<RepositoryItem>,
-    private val onRepoClicked: ((String) -> Unit)
+    private val onRepoClicked: ((String) -> Unit),
+    private val pref: SavedPreference
 ) : RecyclerView.Adapter<ReposAdapter.ReposVH>() {
 
     private lateinit var layoutInflater: LayoutInflater
@@ -38,6 +40,8 @@ class ReposAdapter(
         private val createdAt = itemView.createdAt
         private val updatedAt = itemView.updatedAt
         private val language = itemView.language
+        private val avatarImage = itemView.avatarImage
+        private val userName = itemView.userName
 
         fun bind(item: RepositoryItem, onRepoClicked: (String) -> Unit) {
             title.text = item.name
@@ -51,7 +55,6 @@ class ReposAdapter(
                 }
             }
 
-            Log.e("**********************", "${item.createdAt} ${item.updatedAt}") //ToDO Diksha Check
             createdAt.text = itemView.context.getString(R.string.created_at, item.createdAt)
             updatedAt.text = itemView.context.getString(R.string.updated_at, item.updatedAt)
 
@@ -66,6 +69,15 @@ class ReposAdapter(
 
             itemView.setOnClickListener {
                 onRepoClicked(item.name)
+            }
+
+            pref.getUserResponse()?.let {
+                Glide.with(itemView.context)
+                    .load(it.avatarUrl)
+                    .placeholder(R.drawable.placeholder_profile_image)
+                    .into(avatarImage)
+
+                userName.text = it.name
             }
         }
     }

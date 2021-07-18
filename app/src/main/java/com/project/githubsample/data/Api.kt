@@ -1,6 +1,8 @@
 package com.project.githubsample.data
 
-import com.project.githubsample.model.*
+import com.project.githubsample.model.PullItem
+import com.project.githubsample.model.RepositoryItem
+import com.project.githubsample.model.UserResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

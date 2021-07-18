@@ -92,6 +92,11 @@ class ClosedPRsActivity : BaseActivity() {
         owner = intent.getStringExtra(OWNER)!!
         repo = intent.getStringExtra(REPO)!!
 
+        supportActionBar?.apply {
+            title = repo
+            setDisplayHomeAsUpEnabled(true)
+        }
+
         viewModel.events.observe(this, eventObserver)
         viewModel.prs.observe(this, prsObserver)
 
@@ -100,7 +105,11 @@ class ClosedPRsActivity : BaseActivity() {
         retryButton.setOnClickListener {
             viewModel.getClosedPRsList(owner, repo)
         }
+    }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     override fun onPause() {

@@ -72,6 +72,26 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Kotlin" />
 
+    <ImageView
+        android:id="@+id/avatarImage"
+        android:layout_width="@dimen/forty_dp"
+        android:layout_height="@dimen/forty_dp"
+        android:layout_marginTop="@dimen/eight_dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/updatedAt"
+        tools:src="@drawable/placeholder_profile_image" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/sixteen_dp"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/avatarImage"
+        app:layout_constraintStart_toEndOf="@id/avatarImage"
+        app:layout_constraintTop_toTopOf="@id/avatarImage"
+        tools:text="Diksha Agarwal" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/two_dp"
@@ -80,5 +100,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/updatedAt" />
+        app:layout_constraintTop_toBottomOf="@id/avatarImage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

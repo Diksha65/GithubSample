@@ -1,13 +1,14 @@
 package com.project.githubsample.data
 
 import android.util.Log
-import com.project.githubsample.model.*
+import com.project.githubsample.model.PullItem
+import com.project.githubsample.model.RepositoryItem
+import com.project.githubsample.model.UserResponse
 import com.project.githubsample.utils.BaseApi
 import com.project.githubsample.utils.Result
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.catch
-import java.lang.Exception
+import kotlinx.coroutines.flow.flow
 
 interface DataSource {
     fun getUsersData(userName: String): Flow<Result<UserResponse>>

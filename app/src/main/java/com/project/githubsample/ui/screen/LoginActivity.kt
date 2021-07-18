@@ -75,6 +75,11 @@ class LoginActivity : BaseActivity() {
         setScreen()
     }
 
+    override fun onPause() {
+        progressDialog?.hideProgress()
+        super.onPause()
+    }
+
     private fun setScreen() {
         if (viewModel.getUserName().isNotEmpty()) {
             nameEditText.setText(viewModel.getUserName())
@@ -102,7 +107,7 @@ class LoginActivity : BaseActivity() {
                 Toast.makeText(this, R.string.please_enter_name, Toast.LENGTH_SHORT).show()
             } else {
                 val savedPreference = SavedPreference(this)
-                savedPreference.loginUser(userName)
+                savedPreference.setUserName(userName)
                 viewModel.getUserResponse(
                     userName = userName,
                     pref = savedPreference,

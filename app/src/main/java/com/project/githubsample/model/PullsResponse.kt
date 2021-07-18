@@ -1,23 +1,23 @@
 package com.project.githubsample.model
 
-import com.squareup.moshi.Json
+import com.google.gson.annotations.SerializedName
 
 data class PullItem(
-    @Json(name = "number")
+    @SerializedName("number")
     val number: Int,
 
-    @Json(name = "title")
+    @SerializedName("title")
     val title: String,
 
-    @Json(name = "state")
+    @SerializedName("state")
     val state: String,
 
-    @Json(name = "body")
+    @SerializedName("body")
     val body: String,
 
-    @Json(name = "created_at")
+    @SerializedName("created_at")
     val createdAt: String,
 
-    @Json(name = "closed_at")
+    @SerializedName("closed_at")
     val closedAt: String
 )
