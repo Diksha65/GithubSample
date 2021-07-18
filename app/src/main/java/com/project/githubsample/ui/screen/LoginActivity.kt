@@ -75,6 +75,11 @@ class LoginActivity : BaseActivity() {
         setScreen()
     }
 
+    override fun onPause() {
+        progressDialog?.hideProgress()
+        super.onPause()
+    }
+
     private fun setScreen() {
         if (viewModel.getUserName().isNotEmpty()) {
             nameEditText.setText(viewModel.getUserName())

@@ -7,10 +7,13 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.project.githubsample.R
 import com.project.githubsample.custom.ProgressDialog
@@ -19,7 +22,10 @@ import com.project.githubsample.ui.adapter.ReposAdapter
 import com.project.githubsample.ui.viewmodel.GithubDataViewModel
 import com.project.githubsample.utils.*
 import kotlinx.android.synthetic.main.activity_repo.*
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.nav_header_main.view.*
 import kotlinx.android.synthetic.main.recycler_view.*
+
 
 class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -37,6 +43,7 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var userName: String
     private var progressDialog: ProgressDialog? = null
 
@@ -89,8 +96,9 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_repo)
+        setSupportActionBar(toolbar)
 
-        //setSupportActionBar(toolbar)
+        setUpNavigationDrawer()
 
         userName = intent.getStringExtra(USER_NAME)!!
 
@@ -102,7 +110,6 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
         retryButton.setOnClickListener {
             viewModel.getRepositoriesList(userName)
         }
-
     }
 
     override fun onPause() {
@@ -136,6 +143,43 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
                     }
                 )
             }
+        }
+    }
+
+    private fun setUpNavigationDrawer() {
+        val toggle = ActionBarDrawerToggle(this, drawer_layout, toolbar, R.string.open, R.string.close)
+        toggle.isDrawerIndicatorEnabled = true
+        drawer_layout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        nav_view.setNavigationItemSelectedListener(this)
+
+        val pref = SavedPreference(this)
+        val headerView: View = nav_view.getHeaderView(0)
+
+        Log.e(TAG, "$headerView")
+
+        val userResponse = pref.getUserResponse()
+
+        Log.e(TAG, "userResponse $userResponse")
+        userResponse?.let {
+            Glide.with(this)
+                .load(it.avatarUrl)
+                .placeholder(R.drawable.placeholder_profile_image)
+                .into(headerView.avatarView)
+
+            headerView.githubLoginName.text = it.login
+            headerView.githubName.text = it.name
+
+            if(it.company.isNotNull()) {
+                headerView.company.text = it.company
+                headerView.company.visibility = View.VISIBLE
+            } else {
+                headerView.company.visibility = View.GONE
+            }
+
+            headerView.publicRepos.text = getString(R.string.public_repos, it.publicRepos)
+            headerView.followers_following.text = getString(R.string.followers_following, it.followers, it.following)
         }
     }
 

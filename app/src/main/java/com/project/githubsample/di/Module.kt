@@ -1,5 +1,6 @@
 package com.project.githubsample.di
 
+import com.google.gson.Gson
 import com.project.githubsample.data.*
 import com.project.githubsample.utils.fastLazy
 import com.squareup.moshi.Moshi
