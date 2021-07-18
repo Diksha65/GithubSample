@@ -1,5 +1,7 @@
 package com.project.githubsample.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.project.githubsample.R
 import com.project.githubsample.ui.viewmodel.LoginViewModel
 import com.project.githubsample.utils.BaseActivity
+import com.project.githubsample.utils.SavedPreference
 import com.project.githubsample.utils.afterTextChanged
 import com.project.githubsample.utils.fastLazy
 import kotlinx.android.synthetic.main.activity_login.*
@@ -15,6 +18,13 @@ class LoginActivity : BaseActivity() {
 
     companion object {
         private const val TAG = "LoginActivity"
+
+        fun startActivity(context: Context) {
+            val intent = Intent(context, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            context.startActivity(intent)
+        }
     }
 
     private val viewModel: LoginViewModel by fastLazy {
@@ -31,12 +41,12 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun setScreen() {
-        if(viewModel.getUserName().isNotEmpty()) {
+        if (viewModel.getUserName().isNotEmpty()) {
             nameEditText.setText(viewModel.getUserName())
         }
 
         nameEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            if(hasFocus) {
+            if (hasFocus) {
                 nameEditText.background = getDrawable(R.drawable.edit_text_rounded_border_active)
                 nameEditText.hint = ""
             }
@@ -44,7 +54,7 @@ class LoginActivity : BaseActivity() {
 
         nameEditText.afterTextChanged {
             viewModel.saveUserName(it)
-            if(it.isNotEmpty()) {
+            if (it.isNotEmpty()) {
                 loginButton.setBackgroundColor(getColor(R.color.grey_dark))
             } else {
                 loginButton.setBackgroundColor(getColor(R.color.grey_lightest))
@@ -53,9 +63,11 @@ class LoginActivity : BaseActivity() {
 
         loginButton.setOnClickListener {
             val userName = nameEditText.text.toString()
-            if(userName.isEmpty()) {
+            if (userName.isEmpty()) {
                 Toast.makeText(this, R.string.please_enter_name, Toast.LENGTH_SHORT).show()
             } else {
+                val savedPreference = SavedPreference(this)
+                savedPreference.loginUser(userName)
                 ReposActivity.startActivity(this, userName)
             }
         }
