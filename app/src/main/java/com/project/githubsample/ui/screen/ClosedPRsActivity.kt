@@ -1,5 +1,7 @@
 package com.project.githubsample.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,18 +10,33 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.project.githubsample.R
 import com.project.githubsample.custom.ProgressDialog
-import com.project.githubsample.model.RepositoryItem
-import com.project.githubsample.ui.adapter.ReposAdapter
+import com.project.githubsample.model.PullItem
+import com.project.githubsample.ui.adapter.ClosedPRsAdapter
 import com.project.githubsample.ui.viewmodel.GithubDataViewModel
-import com.project.githubsample.utils.*
+import com.project.githubsample.utils.BaseActivity
+import com.project.githubsample.utils.ScreenEvents
+import com.project.githubsample.utils.fastLazy
+import com.project.githubsample.utils.isNull
 import kotlinx.android.synthetic.main.recycler_view.*
 
-class ReposActivity : BaseActivity() {
+class ClosedPRsActivity : BaseActivity() {
 
     companion object {
-        private const val TAG = "ReposActivity"
+        private const val TAG = "ClosedPRsActivity"
+        private const val OWNER = "OWNER"
+        private const val REPO = "REPO"
+
+        fun startActivity(context: Context, owner: String, repo: String) {
+            val intent = Intent(context, ClosedPRsActivity::class.java).apply {
+                putExtra(OWNER, owner)
+                putExtra(REPO, repo)
+            }
+            context.startActivity(intent)
+        }
     }
 
+    private lateinit var owner: String
+    private lateinit var repo: String
     private var progressDialog: ProgressDialog? = null
 
     private val viewModel: GithubDataViewModel by fastLazy {
@@ -60,8 +77,8 @@ class ReposActivity : BaseActivity() {
         }
     }
 
-    private val reposObserver: Observer<List<RepositoryItem>> by fastLazy {
-        Observer<List<RepositoryItem>> {
+    private val prsObserver: Observer<List<PullItem>> by fastLazy {
+        Observer<List<PullItem>> {
             showSuccessScreen(it)
         }
     }
@@ -72,13 +89,16 @@ class ReposActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.recycler_view)
 
-        viewModel.events.observe(this, eventObserver)
-        viewModel.repos.observe(this, reposObserver)
+        owner = intent.getStringExtra(OWNER)!!
+        repo = intent.getStringExtra(REPO)!!
 
-        viewModel.getRepositoriesList("Diksha65") //ToDo Diksha - Remove the hardcode
+        viewModel.events.observe(this, eventObserver)
+        viewModel.prs.observe(this, prsObserver)
+
+        viewModel.getClosedPRsList(owner, repo) //ToDo Diksha - Remove the hardcode
 
         retryButton.setOnClickListener {
-            viewModel.getRepositoriesList("Diksha65")
+            viewModel.getClosedPRsList(owner, repo)
         }
 
     }
@@ -88,29 +108,24 @@ class ReposActivity : BaseActivity() {
         super.onPause()
     }
 
-    private fun showSuccessScreen(data: List<RepositoryItem>) {
+    private fun showSuccessScreen(data: List<PullItem>) {
         retryButton.visibility = View.GONE
         retryMessage.visibility = View.GONE
 
         if (data.isEmpty()) {
             noResultsText.visibility = View.VISIBLE
-            noResultsText.text = getString(R.string.no_public_repos)
+            noResultsText.text = getString(R.string.no_closed_prs)
             recyclerView.visibility = View.GONE
         } else {
             noResultsText.visibility = View.GONE
             recyclerView.apply {
                 visibility = View.VISIBLE
-                layoutManager = LinearLayoutManager(this@ReposActivity)
+                layoutManager = LinearLayoutManager(this@ClosedPRsActivity)
 
-                adapter = ReposAdapter(
+                adapter = ClosedPRsAdapter(
                     items = data,
-                    onRepoClicked = {
-                        Log.d(TAG, "$it clicked")
-                        ClosedPRsActivity.startActivity(
-                            context = this@ReposActivity,
-                            owner = "Diksha65", //Change this
-                            repo = it
-                        )
+                    onPrClicked = {
+                        Log.e(TAG, "$it clicked")
                     }
                 )
             }

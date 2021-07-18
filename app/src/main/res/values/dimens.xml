@@ -5,6 +5,8 @@
     <dimen name="eight_dp">8dp</dimen>
     <dimen name="twelve_dp">12dp</dimen>
     <dimen name="sixteen_dp">16dp</dimen>
+    <dimen name="twenty_four_dp">24dp</dimen>
+    <dimen name="thirty_two_dp">32dp</dimen>
 
     <dimen name="twelve_sp">12sp</dimen>
     <dimen name="fourteen_sp">14sp</dimen>
