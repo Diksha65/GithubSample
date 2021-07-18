@@ -4,22 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.navigation.NavigationView
 import com.project.githubsample.R
 import com.project.githubsample.custom.ProgressDialog
 import com.project.githubsample.model.RepositoryItem
 import com.project.githubsample.ui.adapter.ReposAdapter
 import com.project.githubsample.ui.viewmodel.GithubDataViewModel
-import com.project.githubsample.utils.BaseActivity
-import com.project.githubsample.utils.ScreenEvents
-import com.project.githubsample.utils.fastLazy
-import com.project.githubsample.utils.isNull
+import com.project.githubsample.utils.*
+import kotlinx.android.synthetic.main.activity_repo.*
 import kotlinx.android.synthetic.main.recycler_view.*
 
-class ReposActivity : BaseActivity() {
+class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
         private const val TAG = "ReposActivity"
@@ -86,7 +88,9 @@ class ReposActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.recycler_view)
+        setContentView(R.layout.activity_repo)
+
+        //setSupportActionBar(toolbar)
 
         userName = intent.getStringExtra(USER_NAME)!!
 
@@ -133,5 +137,20 @@ class ReposActivity : BaseActivity() {
                 )
             }
         }
+    }
+
+    override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.nav_logout -> {
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show()
+                finish()
+                val pref = SavedPreference(this)
+                pref.setUserResponse(null)
+                pref.setUserName(null)
+                LoginActivity.startActivity(this)
+            }
+        }
+        drawer_layout.closeDrawer(GravityCompat.START)
+        return true
     }
 }

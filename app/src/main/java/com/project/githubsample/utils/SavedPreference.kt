@@ -23,7 +23,7 @@ class SavedPreference(context: Context) {
         editor.apply()
     }
 
-    fun loginUser(userName: String) {
+    fun setUserName(userName: String?) {
         editor.putString(LOGGED_IN_USER_NAME, userName)
         editor.commit()
     }

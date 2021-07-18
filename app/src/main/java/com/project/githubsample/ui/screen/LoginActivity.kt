@@ -102,7 +102,7 @@ class LoginActivity : BaseActivity() {
                 Toast.makeText(this, R.string.please_enter_name, Toast.LENGTH_SHORT).show()
             } else {
                 val savedPreference = SavedPreference(this)
-                savedPreference.loginUser(userName)
+                savedPreference.setUserName(userName)
                 viewModel.getUserResponse(
                     userName = userName,
                     pref = savedPreference,
