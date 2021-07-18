@@ -19,4 +19,7 @@
     <string name="edit_text_hint">eg: Diksha65</string>
     <string name="get_in">Get In!!</string>
     <string name="please_enter_name">Please enter a valid Github User Name</string>
+
+    <string name="menu_repos">Repos</string>
+    <string name="menu_logout">Logout</string>
 </resources>
