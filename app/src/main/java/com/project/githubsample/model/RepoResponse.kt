@@ -16,8 +16,5 @@ data class RepositoryItem(
     val createdAt: String,
 
     @SerializedName("updated_at")
-    val updatedAt: String,
-
-    @SerializedName("html_url")
-    val htmlUrl: String
+    val updatedAt: String
 )

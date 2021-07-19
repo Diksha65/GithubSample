@@ -12,9 +12,6 @@ data class UserResponse(
     @SerializedName("avatar_url")
     val avatarUrl: String,
 
-    @SerializedName("html_url")
-    val htmlUrl: String,
-
     @SerializedName("company")
     val company: String? = null,
 
