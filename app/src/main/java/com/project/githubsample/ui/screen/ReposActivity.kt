@@ -11,21 +11,20 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.project.githubsample.R
 import com.project.githubsample.custom.ProgressDialog
-import com.project.githubsample.model.RepositoryItem
 import com.project.githubsample.ui.adapter.ReposAdapter
+import com.project.githubsample.ui.adapter.ReposModelType
 import com.project.githubsample.ui.viewmodel.GithubDataViewModel
 import com.project.githubsample.utils.*
 import kotlinx.android.synthetic.main.activity_repo.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.nav_header_main.view.*
 import kotlinx.android.synthetic.main.recycler_view.*
-
 
 class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,12 +42,33 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var userName: String
+    private var totalPageSize: Int = 20
     private var progressDialog: ProgressDialog? = null
+
+    private val reposList: ArrayList<ReposModelType> by fastLazy {
+        ArrayList<ReposModelType>()
+    }
 
     private val viewModel: GithubDataViewModel by fastLazy {
         ViewModelProvider(this).get(GithubDataViewModel::class.java)
+    }
+
+    private val pref by fastLazy {
+        SavedPreference(this@ReposActivity)
+    }
+
+    private val adapter: ReposAdapter by fastLazy {
+        ReposAdapter(
+            pref = this.pref,
+            onRepoClicked = {
+                ClosedPRsActivity.startActivity(
+                    context = this@ReposActivity,
+                    owner = userName,
+                    repo = it
+                )
+            }
+        )
     }
 
     private val eventObserver: Observer<Pair<ScreenEvents, Any?>> by fastLazy {
@@ -85,9 +105,55 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
         }
     }
 
-    private val reposObserver: Observer<List<RepositoryItem>> by fastLazy {
-        Observer<List<RepositoryItem>> {
+    private val paginationEventObserver: Observer<Pair<ScreenPaginationEvents, Any?>> by fastLazy {
+        Observer<Pair<ScreenPaginationEvents, Any?>> {
+            when (it.first) {
+                ScreenPaginationEvents.ShowRowLoader -> {
+                    adapter.addLoadingItem()
+                }
+                ScreenPaginationEvents.HideRowLoader -> {
+                    adapter.removeLoadingItem()
+                }
+                ScreenPaginationEvents.ShowToast -> {
+                    it.second?.let { data ->
+                        when (data) {
+                            is Int -> Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
+                            is String -> Toast.makeText(this, data, Toast.LENGTH_SHORT).show()
+                            else -> Toast.makeText(
+                                this,
+                                R.string.something_went_wrong,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private val reposObserver: Observer<List<ReposModelType>> by fastLazy {
+        Observer<List<ReposModelType>> {
             showSuccessScreen(it)
+        }
+    }
+
+    private val onScrollListener by fastLazy {
+        object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val currentItems = recyclerView.layoutManager?.childCount!!
+                val totalItems = recyclerView.layoutManager?.itemCount!!
+                val scrollItems =
+                    (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+
+                viewModel.loadNextPage(
+                    userName = userName,
+                    currentItems = currentItems,
+                    scrollItems = scrollItems,
+                    totalItems = totalItems,
+                    totalPageSize = totalPageSize
+                )
+            }
         }
     }
 
@@ -97,18 +163,32 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_repo)
         setSupportActionBar(toolbar)
-
         setUpNavigationDrawer()
 
         userName = intent.getStringExtra(USER_NAME)!!
 
-        viewModel.events.observe(this, eventObserver)
-        viewModel.repos.observe(this, reposObserver)
+        val userResponse = pref.getUserResponse()
+        if (userResponse.isNull()) {
+            Log.e(TAG, "User Response is NULL")
+        } else {
+            totalPageSize = userResponse!!.publicRepos
+        }
 
-        viewModel.getRepositoriesList(userName)
+        recyclerView.apply {
+            layoutManager = layoutManager ?: LinearLayoutManager(this@ReposActivity)
+            adapter = adapter ?: this@ReposActivity.adapter
+            addOnScrollListener(onScrollListener)
+        }
+
+        viewModel.apply {
+            events.observe(this@ReposActivity, eventObserver)
+            paginationEvents.observe(this@ReposActivity, paginationEventObserver)
+            repos.observe(this@ReposActivity, reposObserver)
+            getRepositoriesList(userName, totalPageSize)
+        }
 
         retryButton.setOnClickListener {
-            viewModel.getRepositoriesList(userName)
+            viewModel.getRepositoriesList(userName, totalPageSize)
         }
     }
 
@@ -117,33 +197,28 @@ class ReposActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedLis
         super.onPause()
     }
 
-    private fun showSuccessScreen(data: List<RepositoryItem>) {
+    private fun showSuccessScreen(data: List<ReposModelType>) {
         retryButton.visibility = View.GONE
         retryMessage.visibility = View.GONE
 
-        if (data.isEmpty()) {
-            noResultsText.visibility = View.VISIBLE
-            noResultsText.text = getString(R.string.no_public_repos)
-            recyclerView.visibility = View.GONE
+        if (viewModel.currentPage - 1 == 1) {
+            if (data.isEmpty()) {
+                noResultsText.visibility = View.VISIBLE
+                noResultsText.text = getString(R.string.no_public_repos)
+                recyclerView.visibility = View.GONE
+            } else {
+                noResultsText.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
         } else {
             noResultsText.visibility = View.GONE
-            recyclerView.apply {
-                visibility = View.VISIBLE
-                layoutManager = LinearLayoutManager(this@ReposActivity)
+            recyclerView.visibility = View.VISIBLE
+        }
 
-                adapter = ReposAdapter(
-                    items = data,
-                    pref = SavedPreference(this@ReposActivity),
-                    onRepoClicked = {
-                        Log.d(TAG, "$it clicked")
-                        ClosedPRsActivity.startActivity(
-                            context = this@ReposActivity,
-                            owner = userName,
-                            repo = it
-                        )
-                    }
-                )
-            }
+        if (data.isNotEmpty()) {
+            recyclerView.visibility = View.VISIBLE
+            reposList.addAll(data)
+            adapter.submitList(reposList)
         }
     }
 

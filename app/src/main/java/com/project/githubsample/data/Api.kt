@@ -27,6 +27,8 @@ interface Api {
     @GET(GET_ALL_REPOS)
     suspend fun getAllRepos(
         @Path("username") userName: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int,
         @Query("sort") sort: String = sortRepository
     ): Response<List<RepositoryItem>>
 

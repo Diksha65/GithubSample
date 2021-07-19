@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flow
 
 interface DataSource {
     fun getUsersData(userName: String): Flow<Result<UserResponse>>
-    fun getAllRepos(userName: String): Flow<Result<List<RepositoryItem>>>
+    fun getAllRepos(userName: String, page: Int, perPage: Int): Flow<Result<List<RepositoryItem>>>
     fun getClosedPRs(owner: String, repo: String): Flow<Result<List<PullItem>>>
 }
 
@@ -36,10 +36,10 @@ class DataSourceImpl(
         }
     }
 
-    override fun getAllRepos(userName: String): Flow<Result<List<RepositoryItem>>> {
+    override fun getAllRepos(userName: String, page: Int, perPage: Int): Flow<Result<List<RepositoryItem>>> {
         return flow {
             emit(Result.Loading)
-            val result = getResult { api.getAllRepos(userName) }
+            val result = getResult { api.getAllRepos(userName, page, perPage) }
             Log.d(TAG, "Success: $result")
             emit(result)
         }.catch {

@@ -5,3 +5,9 @@ enum class ScreenEvents(val value: String) {
     DismissProgressDialog("DismissProgressDialog"),
     ShowRetry("ShowRetry")
 }
+
+enum class ScreenPaginationEvents(val value: String) {
+    ShowRowLoader("ShowRowLoader"),
+    HideRowLoader("HideRowLoader"),
+    ShowToast("ShowToast")
+}

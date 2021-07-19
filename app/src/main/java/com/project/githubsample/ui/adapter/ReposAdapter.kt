@@ -1,83 +1,77 @@
 package com.project.githubsample.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.project.githubsample.R
-import com.project.githubsample.model.RepositoryItem
 import com.project.githubsample.utils.SavedPreference
-import com.project.githubsample.utils.isNotNull
-import kotlinx.android.synthetic.main.repo_item.view.*
 
 class ReposAdapter(
-    private val items: List<RepositoryItem>,
     private val onRepoClicked: ((String) -> Unit),
     private val pref: SavedPreference
-) : RecyclerView.Adapter<ReposAdapter.ReposVH>() {
+) : RecyclerView.Adapter<BaseVH>() {
+
+    companion object {
+        private const val TAG = "ReposAdapter"
+        private const val TYPE_REPO_CARD = R.layout.repo_item
+        private const val TYPE_LOADING_CARD = R.layout.layout_list_loading_item
+    }
 
     private lateinit var layoutInflater: LayoutInflater
+    private val reposList = ArrayList<ReposModelType>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReposVH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseVH {
         if (!::layoutInflater.isInitialized)
             layoutInflater = LayoutInflater.from(parent.context)
 
-        val view = layoutInflater.inflate(R.layout.repo_item, parent, false)
-        return ReposVH(view)
+        val layout = layoutInflater.inflate(viewType, parent, false)
+
+        return when (viewType) {
+            TYPE_REPO_CARD -> ReposVH(layout)
+            TYPE_LOADING_CARD -> LoadingVH(layout)
+            else -> {
+                Log.e(TAG, "onCreateViewHolder card type not present $viewType")
+                throw IllegalArgumentException("onCreateViewHolder card type not present $viewType")
+            }
+        }
     }
 
-    override fun onBindViewHolder(holder: ReposVH, position: Int) {
-        holder.bind(items[position], onRepoClicked)
+    override fun onBindViewHolder(holder: BaseVH, position: Int) {
+        holder.bind(reposList[position], pref, onRepoClicked)
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = reposList.size
 
-    inner class ReposVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    override fun getItemViewType(position: Int): Int {
 
-        private val title = itemView.repoTitle
-        private val description = itemView.repoDescription
-        private val createdAt = itemView.createdAt
-        private val updatedAt = itemView.updatedAt
-        private val language = itemView.language
-        private val avatarImage = itemView.avatarImage
-        private val userName = itemView.userName
-
-        fun bind(item: RepositoryItem, onRepoClicked: (String) -> Unit) {
-            title.text = item.name
-
-            description.apply {
-                if (item.description.isNotNull()) {
-                    visibility = View.VISIBLE
-                    text = item.description
-                } else {
-                    visibility = View.GONE
-                }
+        return when (reposList[position]) {
+            is RepoCardType -> TYPE_REPO_CARD
+            is LoadingCardType -> TYPE_LOADING_CARD
+            else -> {
+                Log.e(TAG, "getItemViewType card type not present ${reposList[position]}")
+                throw IllegalArgumentException("getItemViewType card type not present ${reposList[position]}")
             }
+        }
+    }
 
-            createdAt.text = itemView.context.getString(R.string.created_at, item.createdAt)
-            updatedAt.text = itemView.context.getString(R.string.updated_at, item.updatedAt)
+    fun submitList(newRepoList: List<ReposModelType>) {
+        reposList.clear()
+        reposList.addAll(newRepoList)
+        notifyDataSetChanged()
+    }
 
-            language.apply {
-                if (item.language.isNotNull()) {
-                    visibility = View.VISIBLE
-                    text = item.language
-                } else {
-                    visibility = View.GONE
-                }
-            }
+    fun addLoadingItem() {
+        reposList.add(LoadingCardType)
+        notifyDataSetChanged()
+    }
 
-            itemView.setOnClickListener {
-                onRepoClicked(item.name)
-            }
-
-            pref.getUserResponse()?.let {
-                Glide.with(itemView.context)
-                    .load(it.avatarUrl)
-                    .placeholder(R.drawable.placeholder_profile_image)
-                    .into(avatarImage)
-
-                userName.text = it.name
+    fun removeLoadingItem() {
+        for (position in reposList.indices.reversed()) {
+            if (reposList[position] is LoadingCardType) {
+                reposList.removeAt(position)
+                notifyDataSetChanged()
+                return
             }
         }
     }

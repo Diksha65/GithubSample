@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 
 interface Repository {
     fun getUsersData(userName: String): Flow<Result<UserResponse>>
-    fun getAllRepos(userName: String): Flow<Result<List<RepositoryItem>>>
+    fun getAllRepos(userName: String, page: Int, perPage: Int): Flow<Result<List<RepositoryItem>>>
     fun getClosedPRs(owner: String, repo: String): Flow<Result<List<PullItem>>>
 }
 
@@ -26,8 +26,8 @@ class RepositoryImpl(
         }
     }
 
-    override fun getAllRepos(userName: String): Flow<Result<List<RepositoryItem>>> {
-        return dataSource.getAllRepos(userName).map { result ->
+    override fun getAllRepos(userName: String, page: Int, perPage: Int): Flow<Result<List<RepositoryItem>>> {
+        return dataSource.getAllRepos(userName, page, perPage).map { result ->
             when (result) {
                 is Result.Success -> result
                 is Result.Error -> result
